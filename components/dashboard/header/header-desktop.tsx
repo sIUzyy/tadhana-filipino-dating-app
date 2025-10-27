@@ -27,7 +27,7 @@ export default function HeaderDesktop() {
       {/* links */}
       <div className="hidden md:flex items-center space-x-6 ">
         {dashboardLinks.map((item, idx) => {
-          // ✅ determine active state
+          // etermine active state
           const isActive =
             item.href === "/dashboard"
               ? pathname === "/dashboard"

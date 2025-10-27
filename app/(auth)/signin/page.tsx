@@ -1,20 +1,10 @@
-// shadcn
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldSet,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
 // next
 import Link from "next/link";
 import { Metadata } from "next";
 
 // components
 import AuthTitle from "@/components/authentication/auth-title";
+import SignInForm from "@/components/authentication/auth-sign-in-form";
 
 // seo
 export const metadata: Metadata = {
@@ -27,34 +17,13 @@ export default function SignInPage() {
   return (
     <div className="bg-dark-color flex justify-center items-center min-h-screen px-4">
       <div className="w-full max-w-sm text-white">
+        {/* header section */}
         <AuthTitle title="Get Started" label="Sign in" />
 
-        <form>
-          <FieldSet>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="Email address" />
-                <FieldDescription>
-                  Choose a unique username for your account.
-                </FieldDescription>
-              </Field>
-              <Field>
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+        {/* form section */}
+        <SignInForm />
 
-                <Input id="password" type="password" placeholder="Password" />
-                <FieldDescription>
-                  Must be at least 8 characters long.
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-
-            <Button className="bg-white text-black hover:opacity-90">
-              Sign In
-            </Button>
-          </FieldSet>
-        </form>
-
+        {/* details section */}
         <p className="mt-5 text-sm text-gray-500 text-center">
           Don’t have an account?{" "}
           <Link href={"/signup"} className=" text-vibrant-red">

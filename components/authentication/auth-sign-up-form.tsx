@@ -1,5 +1,17 @@
 "use client";
 
+// react
+import { useState } from "react";
+
+// next
+import Image from "next/image";
+
+// icons
+import { UploadCloud } from "lucide-react";
+
+// axios
+import axios from "axios";
+
 // shadcn ui components
 import {
   Select,
@@ -10,115 +22,301 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-
-import { useState } from "react";
-import Image from "next/image";
-import { UploadCloud, X } from "lucide-react";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+} from "@/components/ui/field";
 
 export default function SignUpForm() {
+  // value state
+  const [age, setAge] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
+  const [location, setLocation] = useState("");
+  const [password, setPassword] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+
+  // loading state
+  const [isLoading, setIsLoading] = useState(false);
+
+  // error state
+  const [ageError, setAgeError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [imageError, setImageError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [genderError, setGenderError] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  // image preview
   const [preview, setPreview] = useState<string | null>(null);
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
+  // submit the data in the backend
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!email.trim()) {
+      setEmailError("Email field cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!name.trim()) {
+      setNameError("Name field cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!age.trim()) {
+      setAgeError("Age field cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+
+    if (Number(age) < 18) {
+      setAgeError("Age must be at least 18 years old");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!gender.trim()) {
+      setGenderError("Please select a gender");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!location.trim()) {
+      setLocationError("Location field cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!password.trim()) {
+      setPasswordError("Password field cannot be empty");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!file) {
+      setImageError("Please upload a profile photo");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("name", name);
+      formData.append("age", age);
+      formData.append("gender", gender);
+      formData.append("location", location);
+      formData.append("password", password);
+      formData.append("photo", file); // append file from state
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/signup"`,
+        formData
+      );
+
+      console.log("User signed up successfully:", response.data);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : error;
+      console.log(message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const removeImage = () => setPreview(null);
-
   return (
-    <form className="max-w-xl mx-auto">
+    <form className="max-w-xl mx-auto" onSubmit={handleSubmit}>
       <FieldSet>
         {/* Upload Photo */}
         <Field>
-          <div className="flex flex-col items-center justify-center mt-2">
+          <div className="flex flex-col items-center justify-center">
             {!preview ? (
               <label
                 htmlFor="photo"
-                className="flex flex-col items-center justify-center w-32 h-32 rounded-full border-2 border-dashed border-gray-300 cursor-pointer hover:bg-gray-50 transition relative overflow-hidden"
+                className="flex flex-col items-center justify-center w-32 h-32 rounded-full border-2 border-dashed border-gray-300 cursor-pointer hover:bg-primary-dark transition relative overflow-hidden"
               >
                 <UploadCloud className="h-6 w-6 text-gray-400 mb-1" />
                 <p className="text-xs text-gray-500">Upload photo</p>
                 <Input
                   id="photo"
                   type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
+                  accept="image/png, image/jpeg, image/jpg"
+                  onChange={(e) => {
+                    const selectedFile = e.target.files?.[0];
+                    if (!selectedFile) return;
+
+                    setFile(selectedFile); // store the file in state
+                    const reader = new FileReader();
+                    reader.onloadend = () =>
+                      setPreview(reader.result as string);
+                    reader.readAsDataURL(selectedFile);
+
+                    if (imageError) setImageError("");
+                  }}
                   className="hidden"
                 />
               </label>
             ) : (
-              <div className="relative w-32 h-32 rounded-full overflow-hidden group">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden">
                 <Image
                   src={preview}
                   alt="Profile Preview"
                   fill
                   className="object-cover"
                 />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-1 right-1 bg-black/60 p-1 rounded-full text-white opacity-0 group-hover:opacity-100 transition"
-                >
-                  <X size={14} />
-                </button>
               </div>
+            )}
+
+            {preview && (
+              <Button
+                className="mt-3 hover:text-vibrant-red hoverEffect"
+                size="sm"
+                onClick={() => {
+                  setFile(null);
+                  setPreview(null);
+                }}
+              >
+                Change Photo
+              </Button>
             )}
           </div>
 
-          <p className="text-center text-sm text-gray-500 mt-2">
-            Upload profile picture
-          </p>
+          <FieldDescription className="text-vibrant-red text-xs text-center">
+            {imageError}
+          </FieldDescription>
         </Field>
         <FieldGroup>
-          <div className="flex gap-2">
+          <div className="flex flex-col lg:flex-row gap-2">
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="Email address" />
+              <Input
+                id="email"
+                type="email"
+                placeholder={"e.g., johndoe@example.com"}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError("");
+                }}
+              />
+              <FieldDescription className="text-vibrant-red text-xs">
+                {emailError}
+              </FieldDescription>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="name">Name</FieldLabel>
-              <Input id="name" type="text" placeholder="Name" />
+              <Input
+                id="name"
+                type="text"
+                placeholder={"e.g., John Doe"}
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (nameError) setNameError("");
+                }}
+              />
+              <FieldDescription className="text-vibrant-red text-xs">
+                {nameError}
+              </FieldDescription>
             </Field>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex flex-col lg:flex-row gap-2">
             <Field>
               <FieldLabel htmlFor="age">Age</FieldLabel>
-              <Input id="age" type="number" placeholder="Age" />
+              <Input
+                id="age"
+                type="number"
+                placeholder={"e.g., 18"}
+                value={age}
+                onChange={(e) => {
+                  setAge(e.target.value);
+                  if (ageError) setAgeError("");
+                }}
+              />
+
+              <FieldDescription className="text-vibrant-red text-xs">
+                {ageError}
+              </FieldDescription>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="gender">Gender</FieldLabel>
-              <Select>
+              <Select
+                value={gender}
+                onValueChange={(value) => {
+                  setGender(value);
+                  if (genderError) setGenderError("");
+                }}
+              >
                 <SelectTrigger id="gender">
-                  <SelectValue placeholder="Select gender" />
+                  <SelectValue placeholder={"Select gender"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="prefer-not">Prefer not to say</SelectItem>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                  <SelectItem value="Any">Prefer not to say</SelectItem>
                 </SelectContent>
               </Select>
+
+              <FieldDescription className="text-vibrant-red text-xs">
+                {genderError}
+              </FieldDescription>
             </Field>
           </div>
 
           <Field>
             <FieldLabel htmlFor="location">Location</FieldLabel>
-            <Input id="location" type="text" placeholder="Select Location" />
+            <Input
+              id="location"
+              type="text"
+              placeholder={"e.g., Mandaluyong City"}
+              value={location}
+              onChange={(e) => {
+                setLocation(e.target.value);
+                if (locationError) setLocationError("");
+              }}
+            />
+
+            <FieldDescription className="text-vibrant-red text-xs">
+              {locationError}
+            </FieldDescription>
           </Field>
 
           <Field>
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            <Input id="password" type="password" placeholder="Password" />
+            <Input
+              id="password"
+              type="password"
+              placeholder={"Password"}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (passwordError) setPasswordError("");
+              }}
+            />
+            <FieldDescription className="text-vibrant-red text-xs">
+              {passwordError}
+            </FieldDescription>
           </Field>
         </FieldGroup>
 
-        <Button className="bg-white text-black hover:opacity-90">
+        <Button type="submit" className="bg-white text-black hover:opacity-90">
           Sign Up
         </Button>
       </FieldSet>
