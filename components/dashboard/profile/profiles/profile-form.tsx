@@ -1,3 +1,10 @@
+"use client";
+
+// auth-context
+import { useAuth } from "@/context/auth-context";
+
+import { useRouter } from "next/navigation";
+
 // shadn ui
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -5,6 +12,16 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function ProfileForm() {
+  // auth-context
+  const { logout } = useAuth();
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/signin");
+  };
+
   return (
     <FieldSet>
       <FieldGroup>
@@ -49,7 +66,10 @@ export default function ProfileForm() {
           Save Changes
         </Button>
 
-        <Button className="lg:w-fit lg:px-16 bg-primary-dark text-primary-white dark:bg-primary-white dark:text-primary-dark hover:opacity-90 hoverEffect">
+        <Button
+          onClick={handleLogout}
+          className="lg:w-fit lg:px-16 bg-primary-dark text-primary-white dark:bg-primary-white dark:text-primary-dark hover:opacity-90 hoverEffect"
+        >
           Sign out
         </Button>
       </div>

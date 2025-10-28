@@ -1,5 +1,18 @@
 "use client";
-// shadcn
+
+// react-next
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
+
+// lib
+import axios from "axios";
+import toast from "react-hot-toast";
+
+// components
+import Loading from "../loading";
+
+// shadcn ui components
 import {
   Field,
   FieldDescription,
@@ -9,11 +22,14 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-
-import axios from "axios";
 
 export default function SignInForm() {
+  // navigation
+  const router = useRouter();
+
+  // auth-context
+  const { login } = useAuth();
+
   // value state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +59,7 @@ export default function SignInForm() {
     }
 
     try {
+      // request to backend
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/signin`,
         { email, password },
@@ -53,11 +70,29 @@ export default function SignInForm() {
         }
       );
 
-      const user = response.data.user;
-      console.log("Logged in user:", user);
+      // extract user data from backend response
+      const userData = {
+        id: response.data.user.id,
+        name: response.data.user.name,
+        email: response.data.user.email,
+        token: response.data.user.token,
+      };
+
+      // auth-context
+      login(userData);
+
+      // toast message
+      toast.success("Successfully logged in for Tadhana!");
+
+      // clear fields
+      setEmail("");
+      setPassword("");
+
+      // direct to dashboard after signing in
+      router.push("/dashboard");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : error;
-      console.log(message);
+      toast.error("Signing in failed. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -102,8 +137,12 @@ export default function SignInForm() {
           </Field>
         </FieldGroup>
 
-        <Button type="submit" className="bg-white text-black hover:opacity-90">
-          Sign In
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-white text-black hover:opacity-90"
+        >
+          {isLoading ? <Loading text="Signing In" /> : "Sign In"}
         </Button>
       </FieldSet>
     </form>

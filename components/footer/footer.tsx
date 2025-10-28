@@ -2,14 +2,14 @@
 
 // auth-context
 import { useAuth } from "@/context/auth-context";
+import { useEffect, useState } from "react";
 
 // component
 import Container from "../containers/container";
-
-// image
 import FooterBrandingLogo from "./footer-branding-logo";
 import FooterDisplayLinks from "./footer-display-links";
 
+// links-data
 const linkSections = [
   {
     title: "Quick Links",
@@ -40,10 +40,20 @@ const linkSections = [
 ];
 
 export default function Footer() {
+  // auth-context
   const { user } = useAuth();
 
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent footer from rendering until after hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null; // wait until client-side
+
   // hide the footer is user exist
-  if (!user) return null;
+  if (user) return null;
 
   return (
     <footer className="bg-black text-gray-500">

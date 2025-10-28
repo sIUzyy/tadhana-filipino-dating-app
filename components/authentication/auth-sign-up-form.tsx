@@ -1,16 +1,18 @@
 "use client";
 
-// react
-import { useState } from "react";
-
-// next
+// react-next
 import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
 
-// icons
+// lib
+import axios from "axios";
+import toast from "react-hot-toast";
 import { UploadCloud } from "lucide-react";
 
-// axios
-import axios from "axios";
+// components
+import Loading from "../loading";
 
 // shadcn ui components
 import {
@@ -31,6 +33,12 @@ import {
 } from "@/components/ui/field";
 
 export default function SignUpForm() {
+  // navigation
+  const router = useRouter();
+
+  // auth-context
+  const { login } = useAuth();
+
   // value state
   const [age, setAge] = useState("");
   const [name, setName] = useState("");
@@ -122,17 +130,42 @@ export default function SignUpForm() {
       formData.append("gender", gender);
       formData.append("location", location);
       formData.append("password", password);
-      formData.append("photo", file); // append file from state
+      formData.append("photo", file);
 
+      // request to backend
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/signup"`,
+        `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/signup`,
         formData
       );
 
-      console.log("User signed up successfully:", response.data);
+      // extract user data from backend response
+      const userData = {
+        id: response.data.user.id,
+        name: response.data.user.name,
+        email: response.data.user.email,
+        token: response.data.user.token,
+      };
+
+      // auth-context
+      login(userData);
+
+      // toast message
+      toast.success("Successfully signed up for Tadhana!");
+
+      // clear fields
+      setEmail("");
+      setName("");
+      setAge("");
+      setGender("");
+      setLocation("");
+      setPassword("");
+      setFile(null);
+
+      // direct to dashboard after signing up
+      router.push("/dashboard");
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : error;
-      console.log(message);
+      toast.error("Signing up failed. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -183,7 +216,7 @@ export default function SignUpForm() {
 
             {preview && (
               <Button
-                className="mt-3 hover:text-vibrant-red hoverEffect"
+                className="my-3 border border-gray-600 hover:text-vibrant-red hoverEffect"
                 size="sm"
                 onClick={() => {
                   setFile(null);
@@ -193,6 +226,10 @@ export default function SignUpForm() {
                 Change Photo
               </Button>
             )}
+
+            <p className="text-sm text-gray-500">
+              Upload a photo (max 2 MB, PNG, JPEG, JPG)
+            </p>
           </div>
 
           <FieldDescription className="text-vibrant-red text-xs text-center">
@@ -316,8 +353,12 @@ export default function SignUpForm() {
           </Field>
         </FieldGroup>
 
-        <Button type="submit" className="bg-white text-black hover:opacity-90">
-          Sign Up
+        <Button
+          type="submit"
+          disabled={isLoading}
+          className="bg-white text-black hover:opacity-90"
+        >
+          {isLoading ? <Loading text="Signing Up" /> : "Sign Up"}
         </Button>
       </FieldSet>
     </form>

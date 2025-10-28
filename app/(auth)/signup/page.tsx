@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function SignUpPage() {
   return (
-    <div className="bg-dark-color flex justify-center items-center min-h-screen px-4">
+    <div className="bg-dark-color flex justify-center items-center min-h-screen p-4">
       <div className="w-full text-white">
         {/* header section */}
         <div className="max-w-sm mx-auto">

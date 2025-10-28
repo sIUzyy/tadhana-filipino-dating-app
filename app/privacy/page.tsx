@@ -5,6 +5,9 @@ import Title from "@/components/main-title";
 // next
 import { Metadata } from "next";
 
+// route
+import PublicRoute from "@/components/routes/public-route";
+
 // seo
 export const metadata: Metadata = {
   title: {
@@ -63,29 +66,33 @@ export const privacy_data = [
 
 export default function PrivacyPage() {
   return (
-    <div className="bg-dark-color py-16">
-      <Container>
-        <div>
-          <Title text="Privacy Policy" className="mb-4" />
-          <p className="font-medium text-pretty text-gray-400">
-            At <strong className="text-vibrant-red">Tadhana</strong>, we value
-            your privacy. This Privacy Policy explains how we collect, use, and
-            protect your personal information when you use our Filipino dating
-            app and website.
-          </p>
+    <PublicRoute>
+      <div className="bg-dark-color py-16">
+        <Container>
+          <div>
+            <Title text="Privacy Policy" className="mb-4" />
+            <p className="font-medium text-pretty text-gray-400">
+              At <strong className="text-vibrant-red">Tadhana</strong>, we value
+              your privacy. This Privacy Policy explains how we collect, use,
+              and protect your personal information when you use our Filipino
+              dating app and website.
+            </p>
 
-          {privacy_data.map((item, index) => (
-            <div key={index}>
-              <h1 className="text-xl font-semibold mt-8 mb-3 text-gray-200">
-                {item.label}
-              </h1>
-              <p className="text-gray-400">{item.details}</p>
-            </div>
-          ))}
+            {privacy_data.map((item, index) => (
+              <div key={index}>
+                <h1 className="text-xl font-semibold mt-8 mb-3 text-gray-200">
+                  {item.label}
+                </h1>
+                <p className="text-gray-400">{item.details}</p>
+              </div>
+            ))}
 
-          <p className="mt-10 text-gray-400">Last updated: October 27, 2025</p>
-        </div>
-      </Container>
-    </div>
+            <p className="mt-10 text-gray-400">
+              Last updated: October 27, 2025
+            </p>
+          </div>
+        </Container>
+      </div>
+    </PublicRoute>
   );
 }

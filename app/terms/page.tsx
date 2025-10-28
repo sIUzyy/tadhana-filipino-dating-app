@@ -1,7 +1,12 @@
+import { Metadata } from "next";
 // next
+
+// container
 import Container from "@/components/containers/container";
 import Title from "@/components/main-title";
-import { Metadata } from "next";
+
+// route
+import PublicRoute from "@/components/routes/public-route";
 
 // seo
 export const metadata: Metadata = {
@@ -82,29 +87,34 @@ export const terms_data = [
 
 export default function TermsPage() {
   return (
-    <div className="bg-dark-color py-16">
-      <Container>
-        <div>
-          <Title text="Terms of Service" className="mb-4" />
-          <p className="font-medium text-pretty text-gray-400">
-            Welcome to <strong className="text-vibrant-red">Tadhana</strong>. By
-            using our Filipino dating app and website, you agree to our Terms of
-            Service, which outline the rules, responsibilities, and expectations
-            that ensure a safe and respectful community for everyone.
-          </p>
+    <PublicRoute>
+      <div className="bg-dark-color py-16">
+        <Container>
+          <div>
+            <Title text="Terms of Service" className="mb-4" />
+            <p className="font-medium text-pretty text-gray-400">
+              Welcome to <strong className="text-vibrant-red">Tadhana</strong>.
+              By using our Filipino dating app and website, you agree to our
+              Terms of Service, which outline the rules, responsibilities, and
+              expectations that ensure a safe and respectful community for
+              everyone.
+            </p>
 
-          {terms_data.map((item, index) => (
-            <div key={index}>
-              <h1 className="text-xl font-semibold mt-8 mb-3 text-gray-200">
-                {item.label}
-              </h1>
-              <p className="text-gray-400">{item.details}</p>
-            </div>
-          ))}
+            {terms_data.map((item, index) => (
+              <div key={index}>
+                <h1 className="text-xl font-semibold mt-8 mb-3 text-gray-200">
+                  {item.label}
+                </h1>
+                <p className="text-gray-400">{item.details}</p>
+              </div>
+            ))}
 
-          <p className="mt-10 text-gray-400">Last updated: October 27, 2025</p>
-        </div>
-      </Container>
-    </div>
+            <p className="mt-10 text-gray-400">
+              Last updated: October 27, 2025
+            </p>
+          </div>
+        </Container>
+      </div>
+    </PublicRoute>
   );
 }

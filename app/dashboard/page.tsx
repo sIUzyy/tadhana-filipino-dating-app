@@ -11,6 +11,8 @@ import { X, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Container from "@/components/containers/container";
 
+import { useAuth } from "@/context/auth-context";
+
 // fake user data
 const users = [
   {
@@ -35,6 +37,9 @@ const users = [
 
 export default function Dashboard() {
   const [people, setPeople] = useState(users);
+
+  const { user } = useAuth();
+  console.log(user);
 
   const removeCard = (id: number) => {
     setPeople((prev) => prev.filter((p) => p.id !== id));

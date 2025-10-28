@@ -1,7 +1,8 @@
 "use client";
 
-// react
-import React from "react";
+// react-next
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // auth-context
 import { useAuth } from "@/context/auth-context";
@@ -15,18 +16,29 @@ import TestimonialSection from "@/components/testimonial/testimonial-section";
 // show this dashboard if user is logged in
 import Dashboard from "./dashboard/page";
 
+// route
+import PublicRoute from "@/components/routes/public-route";
+
 export default function Home() {
+  // auth-context
   const { user } = useAuth();
 
-  // If user exists, show dashboard instead of landing page
-  if (user) return <Dashboard />;
+  // navigation
+  const router = useRouter();
+
+  // if logged in, redirect to dashboard
+  useEffect(() => {
+    if (user) {
+      router.replace("/dashboard");
+    }
+  }, [user, router]);
 
   return (
-    <React.Fragment>
+    <PublicRoute>
       <Hero />
       <AboutSection />
       <TestimonialSection />
       <FeatureSection />
-    </React.Fragment>
+    </PublicRoute>
   );
 }

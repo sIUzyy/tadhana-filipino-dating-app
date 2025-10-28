@@ -6,6 +6,7 @@ import "./globals.css";
 
 // components
 import Footer from "@/components/footer/footer";
+import ClientToast from "@/components/client-toast";
 
 // auth-context
 import { AuthProvider } from "@/context/auth-context";
@@ -38,6 +39,7 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <AuthProvider>
         <body>
+          <ClientToast />
           <main>{children}</main>
           <Footer />
         </body>

@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 
 // components
+import PrivateRoute from "@/components/routes/private-route";
 import HeaderSection from "@/components/dashboard/header/header-section";
 
 // theme-context
@@ -27,9 +28,11 @@ export default function UserLayout({
   if (!mounted) return null;
 
   return (
-    <ThemeProvider>
-      <HeaderSection />
-      <main>{children}</main>
-    </ThemeProvider>
+    <PrivateRoute>
+      <ThemeProvider>
+        <HeaderSection />
+        <main>{children}</main>
+      </ThemeProvider>
+    </PrivateRoute>
   );
 }
