@@ -47,7 +47,7 @@ export default function HeaderMobile() {
 
       {/* links (check if menu is open) */}
       {isMobileMenuOpen && (
-        <div className="mobile-menu absolute top-[70px] left-0 w-full bg-white dark:bg-[#18181B] transition-all shadow-sm p-6 md:hidden">
+        <div className="mobile-menu z-10 absolute top-[70px] left-0 w-full bg-white dark:bg-[#18181B] transition-all shadow-sm p-6 md:hidden">
           <div className="flex flex-col space-y-4 text-sm">
             {dashboardLinks.map((item, idx) => {
               // etermine active state

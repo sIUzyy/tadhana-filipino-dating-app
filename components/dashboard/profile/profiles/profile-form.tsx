@@ -11,7 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 // component
-import Loading from "@/components/loading";
+import ProfileSkeleton from "./profile-skeleton";
 
 // image-source
 import placeholder_img from "../../../../images/image-placeholder.jpg";
@@ -72,12 +72,6 @@ export default function ProfileForm() {
     fetchProfile();
   }, [user, logout, router]);
 
-  // logout function from context and redirect to signin page
-  const handleLogout = () => {
-    logout();
-    router.replace("/signin");
-  };
-
   // handle the photo change
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -122,10 +116,7 @@ export default function ProfileForm() {
   };
 
   // show a loading if all the data is not fully loaded yet
-  if (!profile)
-    return (
-      <Loading className="flex justify-center" text="Profile is loading" />
-    );
+  if (!profile) return <ProfileSkeleton />;
 
   // destructure after the null check
   const { email, gender, name, location, age, photo, bio } = profile;
@@ -219,13 +210,6 @@ export default function ProfileForm() {
           className="lg:w-fit lg:px-10 bg-green-600  text-white outline-none hover:opacity-90 hoverEffect"
         >
           Save Changes
-        </Button>
-
-        <Button
-          onClick={handleLogout}
-          className="lg:w-fit lg:px-16 bg-primary-dark text-primary-white dark:bg-primary-white dark:text-primary-dark hover:opacity-90 hoverEffect"
-        >
-          Sign out
         </Button>
       </div>
     </FieldSet>

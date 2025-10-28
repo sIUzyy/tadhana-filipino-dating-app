@@ -43,7 +43,7 @@ export default function PreferencesSelection() {
         </Field>
 
         {/* distance */}
-        <Field>
+        {/* <Field>
           <FieldLabel>Maximum Distance (km)</FieldLabel>
           <Slider
             defaultValue={[20]}
@@ -53,7 +53,7 @@ export default function PreferencesSelection() {
             className="mt-2"
           />
           <p className="text-sm text-gray-500 mt-1">Within 20 km</p>
-        </Field>
+        </Field> */}
       </FieldGroup>
 
       <div className="flex lg:justify-end">

@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
       },
     ],
 
-    domains: ["randomuser.me"],
+    domains: ["randomuser.me", "i.pravatar.cc"],
   },
 };
 
