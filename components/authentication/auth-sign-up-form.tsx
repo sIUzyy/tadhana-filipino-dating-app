@@ -227,7 +227,7 @@ export default function SignUpForm() {
               </Button>
             )}
 
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mt-1">
               Upload a photo (max 2 MB, PNG, JPEG, JPG)
             </p>
           </div>

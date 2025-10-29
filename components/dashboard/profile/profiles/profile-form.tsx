@@ -1,78 +1,62 @@
 "use client";
 
-// react-next
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/auth-context";
-
-// lib
 import axios from "axios";
 import toast from "react-hot-toast";
-
-// component
 import ProfileSkeleton from "./profile-skeleton";
-
-// image-source
 import placeholder_img from "../../../../images/image-placeholder.jpg";
 
-// shadn ui
+// shadcn ui
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 
-export default function ProfileForm() {
-  // auth-context
-  const { user, logout } = useAuth();
+import { motion, AnimatePresence } from "framer-motion";
 
-  // navigation
+export default function ProfileForm() {
+  const { user, logout, updateUser } = useAuth();
   const router = useRouter();
 
-  // user data state
   const [profile, setProfile] = useState<any>(null);
+  const [originalProfile, setOriginalProfile] = useState<any>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [newPhoto, setNewPhoto] = useState<File | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // fetch user profile function
+  // Fetch user profile
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        // if your context has token:
         const token = user?.token || localStorage.getItem("token");
-
-        // if no token, re-direct to /signin page
         if (!token) {
           router.replace("/signin");
           return;
         }
 
-        // request to backend
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/me`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         setProfile(response.data.user);
+        setOriginalProfile(response.data.user);
       } catch (err) {
         console.error("Error fetching profile:", err);
-
-        // show an error using toast
         toast.error("Failed to fetch profile. Please try again.");
-
-        // (option): force logout if token invalid
         logout();
         router.replace("/signin");
       }
     };
 
-    // invoke the function
     fetchProfile();
   }, [user, logout, router]);
 
-  // handle the photo change
+  // Handle photo change
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -81,7 +65,7 @@ export default function ProfileForm() {
     }
   };
 
-  // handle save changes (photo, name, bio)
+  // Handle save
   const handleSave = async () => {
     try {
       const token = user?.token || localStorage.getItem("token");
@@ -92,7 +76,6 @@ export default function ProfileForm() {
       formData.append("bio", profile.bio || "");
       if (newPhoto) formData.append("photo", newPhoto);
 
-      // request to backend
       const response = await axios.patch(
         `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/me`,
         formData,
@@ -104,60 +87,71 @@ export default function ProfileForm() {
         }
       );
 
-      setProfile(response.data.user);
+      const updatedUser = response.data.user;
+
+      // ✅ Update AuthContext + localStorage
+      updateUser({ name: updatedUser.name });
+
+      setProfile(updatedUser);
       setNewPhoto(null);
       setPreview(null);
+      setIsEditing(false);
       toast.success("Your profile was updated successfully.");
       router.refresh();
     } catch (err) {
-      // console.error("Error saving profile:", err);
       toast.error("Failed to update profile. Please try again.");
     }
   };
 
-  // show a loading if all the data is not fully loaded yet
+  // Handle cancel (restore previous state)
+  const handleCancel = () => {
+    setProfile(originalProfile);
+    setPreview(null);
+    setNewPhoto(null);
+    setIsEditing(false);
+  };
+
   if (!profile) return <ProfileSkeleton />;
 
-  // destructure after the null check
   const { email, gender, name, location, age, photo, bio } = profile;
 
-  // determine the display image safely
   const imageSrc =
     preview ||
     (photo
       ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/${photo.replace(/\\/g, "/")}`
-      : placeholder_img);
+      : ""); // empty if no image
 
   return (
     <FieldSet>
       <div className="flex flex-col items-center gap-3 mb-5">
-        <div className="relative h-28 w-28">
-          <Image
-            src={imageSrc}
-            width={112}
-            height={112}
+        <Avatar className="w-24 h-24 border border-gray-300 dark:border-gray-700">
+          <AvatarImage
+            src={imageSrc || placeholder_img.src}
             alt="profile photo"
-            unoptimized
-            className="rounded-full object-cover border border-gray-300 dark:border-gray-700"
           />
-        </div>
+          <AvatarFallback>{name?.[0] || "?"}</AvatarFallback>
+        </Avatar>
 
-        <input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          id="photo"
-          className="hidden"
-          onChange={handlePhotoChange}
-        />
-
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => document.getElementById("photo")?.click()}
-        >
-          Change Photo
-        </Button>
+        {isEditing && (
+          <>
+            <input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              id="photo"
+              className="hidden"
+              onChange={handlePhotoChange}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => document.getElementById("photo")?.click()}
+            >
+              Change Photo
+            </Button>
+          </>
+        )}
       </div>
+
       <FieldGroup>
         <div className="flex flex-col lg:flex-row gap-2 mt-7">
           <Field>
@@ -184,6 +178,8 @@ export default function ProfileForm() {
               type="text"
               value={name}
               onChange={(e) => setProfile({ ...profile, name: e.target.value })}
+              disabled={!isEditing}
+              readOnly={!isEditing}
             />
           </Field>
 
@@ -195,22 +191,59 @@ export default function ProfileForm() {
 
         <Field>
           <FieldLabel>Bio</FieldLabel>
-
           <Textarea
             placeholder="Type your bio here."
             value={bio || ""}
             onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+            disabled={!isEditing}
+            readOnly={!isEditing}
           />
         </Field>
       </FieldGroup>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:justify-end">
-        <Button
-          onClick={handleSave}
-          className="lg:w-fit lg:px-10 bg-green-600  text-white outline-none hover:opacity-90 hoverEffect"
-        >
-          Save Changes
-        </Button>
+      {/* ACTION BUTTONS */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:justify-end mt-5">
+        <AnimatePresence mode="wait">
+          {!isEditing ? (
+            <motion.div
+              key="edit-button"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+            >
+              <Button
+                onClick={() => setIsEditing(true)}
+                className="w-full lg:w-fit lg:px-10 bg-blue-600 text-white hover:opacity-90"
+              >
+                Edit Profile
+              </Button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="edit-actions"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.25 }}
+              className="flex flex-col gap-4 lg:flex-row lg:justify-end"
+            >
+              <Button
+                onClick={handleSave}
+                className="lg:w-fit lg:px-10 bg-green-600 text-white hover:opacity-90"
+              >
+                Save Changes
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleCancel}
+                className="lg:w-fit lg:px-10 hover:bg-gray-100 dark:hover:bg-gray-800"
+              >
+                Cancel
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </FieldSet>
   );

@@ -7,12 +7,17 @@ type User = {
   name: string;
   email: string;
   token: string;
+  preferences?: {
+    gender?: string;
+    ageRange?: { min: number; max: number };
+  };
 } | null;
 
 type AuthContextType = {
   user: User;
   login: (userData: User) => void;
   logout: () => void;
+  updateUser: (updatedData: Partial<User>) => void; // ✅ new
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,9 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = (userData: User) => {
     setUser(userData);
-    if (userData) {
-      localStorage.setItem("user", JSON.stringify(userData));
-    }
+    if (userData) localStorage.setItem("user", JSON.stringify(userData));
   };
 
   const logout = () => {
@@ -38,7 +41,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("user");
   };
 
-  return <AuthContext value={{ user, login, logout }}>{children}</AuthContext>;
+  // ✅ New function: update only part of user data (like preferences)
+  const updateUser = (updatedData: Partial<User>) => {
+    setUser((prev) => {
+      const newUser = prev ? { ...prev, ...updatedData } : null;
+      if (newUser) localStorage.setItem("user", JSON.stringify(newUser));
+      return newUser;
+    });
+  };
+
+  return (
+    <AuthContext value={{ user, login, logout, updateUser }}>
+      {children}
+    </AuthContext>
+  );
 }
 
 export function useAuth() {

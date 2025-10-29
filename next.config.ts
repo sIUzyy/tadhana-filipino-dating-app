@@ -10,8 +10,6 @@ const nextConfig: NextConfig = {
         pathname: "/uploads/images/**",
       },
     ],
-
-    domains: ["randomuser.me", "i.pravatar.cc"],
   },
 };
 

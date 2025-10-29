@@ -2,13 +2,24 @@
 import Image from "next/image";
 
 // lib
-import { MapPin } from "lucide-react";
+import { MapPin, Venus, Mars, VenusAndMars } from "lucide-react";
 import { motion, useMotionValue, useTransform } from "framer-motion";
+
+// image-src
+import placeholder_img from "../../../images/image-placeholder.jpg";
 
 export default function SwipeCard({ person, isTop, handleSwipe }: any) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-15, 15]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
+
+  const imageSrc =
+    person?.image && person.image.trim() !== ""
+      ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/${person.image.replace(
+          /\\/g,
+          "/"
+        )}`
+      : placeholder_img.src;
 
   return (
     <motion.div
@@ -25,11 +36,12 @@ export default function SwipeCard({ person, isTop, handleSwipe }: any) {
     >
       {/* Background Image */}
       <Image
-        src={person.image}
+        src={imageSrc}
         alt={person.name}
         fill
         className="object-cover"
         priority
+        unoptimized
       />
 
       {/* Gradient overlay for readability */}
@@ -38,14 +50,35 @@ export default function SwipeCard({ person, isTop, handleSwipe }: any) {
       {/* Text content */}
       <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
         <h2 className="text-2xl font-semibold">{person.name}</h2>
-        <p className="flex items-center gap-1 text-sm text-gray-200 ">
-          <MapPin size={15} />
-          {person.location}
-        </p>
-        {person.bio && (
-          <p className="text-sm text-gray-300 mt-3 line-clamp-2">
-            {person.bio}
+
+        <div className="flex gap-1 mt-1 mb-4">
+          <p className="flex items-center gap-1 text-xs  border border-vibrant-red  py-1 px-5 rounded-full ">
+            <MapPin size={15} />
+            {person.location}
           </p>
+          <p className="flex items-center gap-1 text-xs  border border-vibrant-red py-1 px-5 rounded-full  ">
+            {person.gender === "Female" && (
+              <>
+                <Venus size={15} /> {person.gender}
+              </>
+            )}
+
+            {person.gender === "Male" && (
+              <>
+                <Mars size={15} /> {person.gender}
+              </>
+            )}
+
+            {person.gender === "Any" && (
+              <>
+                <VenusAndMars size={15} /> {person.gender}
+              </>
+            )}
+          </p>
+        </div>
+
+        {person.bio && (
+          <p className="text-sm text-gray-300 line-clamp-2">{person.bio}</p>
         )}
       </div>
     </motion.div>

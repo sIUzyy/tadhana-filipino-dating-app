@@ -28,11 +28,14 @@ export default function MatchesContent() {
       setIsLoading(true);
       try {
         const token = user?.token || localStorage.getItem("token");
-        const res = await axios.get("http://localhost:5000/api/v1/match", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/match`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         setMatches(res.data.matches || []);
-        console.log(res.data.matches);
+        // console.log(res.data.matches);
       } catch (err) {
         console.error(err);
         toast.error("Failed to load matches.");
@@ -51,7 +54,7 @@ export default function MatchesContent() {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/v1/match/unmatch/${matchId}`,
+        `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/match/unmatch/${matchId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
