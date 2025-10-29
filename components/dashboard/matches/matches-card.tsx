@@ -32,7 +32,7 @@ export default function MatchesCard({ data, onUnmatch }: MatchesCardProps) {
       {data.map((match) => {
         return (
           <Card key={match._id}>
-            <CardHeader className="flex items-center">
+            <CardHeader className="flex ">
               <Avatar className="w-24 h-24 border border-gray-300 dark:border-gray-700">
                 <AvatarImage
                   src={
@@ -55,15 +55,13 @@ export default function MatchesCard({ data, onUnmatch }: MatchesCardProps) {
                   {match.bio}
                 </CardDescription>
 
-                <div className="flex flex-col lg:flex-row gap-2 mt-4">
-                  <Button variant="secondary">Send a Message</Button>
-                  <Button
-                    variant="secondary"
-                    onClick={() => onUnmatch(match.matchId)}
-                  >
-                    Unmatch
-                  </Button>
-                </div>
+                <Button
+                  className="mt-4 w-full"
+                  variant="destructive"
+                  onClick={() => onUnmatch(match.matchId)}
+                >
+                  Unmatch
+                </Button>
               </div>
             </CardHeader>
           </Card>

@@ -6,7 +6,9 @@ type User = {
   id: string;
   name: string;
   email: string;
-  token: string;
+  photo: string;
+  token: string; // backend JWT
+  streamToken?: string; // Stream token from backend
   preferences?: {
     gender?: string;
     ageRange?: { min: number; max: number };

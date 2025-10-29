@@ -34,7 +34,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const toggleButton = () => setIsDark((prev) => !prev);
 
   return (
-    <ThemeContext value={{ isDark, toggleButton }}>{children}</ThemeContext>
+    <ThemeContext.Provider value={{ isDark, toggleButton }}>
+      {children}
+    </ThemeContext.Provider>
   );
 }
 

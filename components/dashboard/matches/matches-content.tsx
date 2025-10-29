@@ -11,8 +11,8 @@ import MatchesCard from "./matches-card";
 // lib
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
 import MatchesSkeleton from "./matches-skeleton";
+import MatchesEmpty from "./matches-empty";
 
 export default function MatchesContent() {
   const [matches, setMatches] = useState<any[]>([]);
@@ -70,18 +70,14 @@ export default function MatchesContent() {
     }
   };
 
+  console.log(matches);
+
   return (
     <div>
       {isLoading ? (
         <MatchesSkeleton />
       ) : matches.length === 0 ? (
-        <Button
-          onClick={() => router.push("/dashboard")}
-          variant="outline"
-          className="text-center"
-        >
-          Still looking? Match naaaaAaaaAaa
-        </Button>
+        <MatchesEmpty />
       ) : (
         <MatchesCard data={matches} onUnmatch={handleUnmatch} />
       )}

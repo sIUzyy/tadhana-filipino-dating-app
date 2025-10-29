@@ -1,3 +1,4 @@
+@import url("stream-chat-react/dist/css/v2/index.css");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -123,6 +124,75 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.str-chat__theme-dark {
+  /* Main background colors */
+  --str-chat__primary-color: #ff4d6d;
+  --str-chat__active-primary-color: #ff667f;
+  --str-chat__surface-color: #18181b;
+  --str-chat__secondary-surface-color: #27272a;
+  --str-chat__primary-surface-color: #3f3f46;
+  --str-chat__primary-surface-color-low-emphasis: #52525b;
+
+  /* Text colors */
+  --str-chat__text-color: #fafafa;
+  --str-chat__text-low-emphasis-color: #a1a1aa;
+
+  /* Border colors */
+  --str-chat__border-color: rgba(255, 255, 255, 0.1);
+
+  /* Message colors */
+  --str-chat__message-bubble-color: #27272a;
+  --str-chat__own-message-bubble-color: #ff4d6d;
+  --str-chat__own-message-text-color: #ffffff;
+
+  /* Input colors */
+  --str-chat__input-background-color: #27272a;
+  --str-chat__input-border-color: rgba(255, 255, 255, 0.15);
+}
+
+.str-chat__theme-dark .str-chat__message-simple {
+  background-color: transparent;
+}
+
+.str-chat__theme-dark .str-chat__message-simple-text-inner {
+  color: #fafafa;
+}
+
+.str-chat__theme-dark
+  .str-chat__message-simple--me
+  .str-chat__message-simple-text-inner {
+  color: #ffffff;
+}
+
+/* Fix for message container background */
+.str-chat__theme-dark
+  .str-chat__message-simple--me
+  .str-chat__message-simple__actions {
+  background-color: transparent !important;
+}
+
+.str-chat__theme-dark .str-chat__input-flat,
+.str-chat__theme-dark .str-chat__input-flat-wrapper {
+  background-color: #27272a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.str-chat__theme-dark .str-chat__input-flat:focus-within {
+  border-color: #ff4d6d;
+}
+
+.str-chat__theme-dark .str-chat__message-list,
+.str-chat__theme-dark .str-chat__list {
+  background-color: #18181b;
+}
+
+/* Remove any default backgrounds */
+.str-chat__theme-dark .str-chat__container,
+.str-chat__theme-dark .str-chat__channel,
+.str-chat__theme-dark .str-chat__main-panel {
+  background-color: #18181b !important;
 }
 
 @layer base {

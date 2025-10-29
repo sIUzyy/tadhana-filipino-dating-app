@@ -1,21 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/auth-context";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { X, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { AnimatePresence } from "framer-motion";
 import SwipeCard from "./discovery-swiping-card";
 import { Skeleton } from "@/components/ui/skeleton";
-import no_match_image from "../../../images/no-match.webp";
+
+import DiscoveryNoMore from "./discovery-no-more";
+import DiscoveryXHeartBtn from "./discovery-x-heart-btn";
 
 export default function DiscoverySwipingMechanics() {
   const { user } = useAuth();
-  const router = useRouter();
   const [people, setPeople] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -86,22 +83,10 @@ export default function DiscoverySwipingMechanics() {
         {isLoading ? (
           <Skeleton className="w-[250px] h-[400px] rounded-xl" />
         ) : people.length === 0 ? (
-          <div className="flex flex-col gap-2 items-center justify-center">
-            <Image
-              src={no_match_image}
-              alt="no-match-image"
-              width={250}
-              className="rounded-2xl"
-              loading="lazy"
-            />
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => router.push("/dashboard/matches")}
-            >
-              View Matches
-            </Button>
-          </div>
+          <DiscoveryNoMore
+            isLoading={isLoading}
+            fetchDiscovery={fetchDiscovery}
+          />
         ) : (
           <AnimatePresence>
             {people.map((person, index) => (
@@ -117,18 +102,7 @@ export default function DiscoverySwipingMechanics() {
       </div>
 
       {people.length !== 0 && !isLoading && (
-        <div className="flex justify-center items-center gap-5 mt-5">
-          <button
-            onClick={() => handleSwipe(people[people.length - 1]?.id, false)}
-          >
-            <X className="hover:opacity-80" size={25} />
-          </button>
-          <button
-            onClick={() => handleSwipe(people[people.length - 1]?.id, true)}
-          >
-            <Heart className="text-vibrant-red hover:opacity-80" size={25} />
-          </button>
-        </div>
+        <DiscoveryXHeartBtn people={people} handleSwipe={handleSwipe} />
       )}
     </div>
   );
