@@ -1,4 +1,4 @@
-[image.png]
+![alt text](image.png)
 
 # Tadhana - A filipino dating app
 
