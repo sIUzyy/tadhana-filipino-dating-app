@@ -92,10 +92,6 @@ export default function SignInForm() {
       // direct to dashboard after signing in
       router.push("/dashboard");
     } catch (error: unknown) {
-      setIsLoading(false);
-
-      setIsLoading(false);
-
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
         const message = error.response?.data?.message;

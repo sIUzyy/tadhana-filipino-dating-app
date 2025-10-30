@@ -165,8 +165,27 @@ export default function SignUpForm() {
       // direct to dashboard after signing up
       router.push("/dashboard");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : error;
-      toast.error("Signing up failed. Please try again later.");
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        // map backend error messages to fields
+        if (status === 422) {
+          // validation error
+          toast.error(message || "Invalid input, please check your data.");
+        } else if (status === 400) {
+          // user already exists
+          setEmailError(
+            message || "User already exists. Please log in instead."
+          );
+        } else if (status === 500) {
+          toast.error(message || "Server error. Please try again later.");
+        } else {
+          toast.error(message || "Signing up failed. Please try again.");
+        }
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

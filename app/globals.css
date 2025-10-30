@@ -127,72 +127,60 @@
 }
 
 .str-chat__theme-dark {
-  /* Main background colors */
   --str-chat__primary-color: #ff4d6d;
   --str-chat__active-primary-color: #ff667f;
-  --str-chat__surface-color: #18181b;
-  --str-chat__secondary-surface-color: #27272a;
-  --str-chat__primary-surface-color: #3f3f46;
+  --str-chat__surface-color: #18181b; /* main background */
+  --str-chat__secondary-surface-color: #27272a; /* message background */
+  --str-chat__primary-surface-color: #3f3f46; /* own messages */
   --str-chat__primary-surface-color-low-emphasis: #52525b;
 
-  /* Text colors */
-  --str-chat__text-color: #fafafa;
+  --str-chat__text-color: #f5f5f5;
   --str-chat__text-low-emphasis-color: #a1a1aa;
 
-  /* Border colors */
   --str-chat__border-color: rgba(255, 255, 255, 0.1);
 
-  /* Message colors */
-  --str-chat__message-bubble-color: #27272a;
-  --str-chat__own-message-bubble-color: #ff4d6d;
+  --str-chat__message-bubble-color: #27272a; /* incoming messages */
+  --str-chat__message-text-color: #f5f5f5;
+  --str-chat__own-message-bubble-color: #ff4d6d; /* outgoing messages */
   --str-chat__own-message-text-color: #ffffff;
 
-  /* Input colors */
   --str-chat__input-background-color: #27272a;
   --str-chat__input-border-color: rgba(255, 255, 255, 0.15);
 }
 
-.str-chat__theme-dark .str-chat__message-simple {
-  background-color: transparent;
-}
-
+/* Fix message text visibility */
 .str-chat__theme-dark .str-chat__message-simple-text-inner {
-  color: #fafafa;
+  color: #f5f5f5 !important;
 }
 
 .str-chat__theme-dark
   .str-chat__message-simple--me
   .str-chat__message-simple-text-inner {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
-/* Fix for message container background */
-.str-chat__theme-dark
-  .str-chat__message-simple--me
-  .str-chat__message-simple__actions {
-  background-color: transparent !important;
-}
-
-.str-chat__theme-dark .str-chat__input-flat,
-.str-chat__theme-dark .str-chat__input-flat-wrapper {
-  background-color: #27272a;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.str-chat__theme-dark .str-chat__input-flat:focus-within {
-  border-color: #ff4d6d;
-}
-
-.str-chat__theme-dark .str-chat__message-list,
-.str-chat__theme-dark .str-chat__list {
-  background-color: #18181b;
-}
-
-/* Remove any default backgrounds */
+/* Remove container background issues */
 .str-chat__theme-dark .str-chat__container,
 .str-chat__theme-dark .str-chat__channel,
 .str-chat__theme-dark .str-chat__main-panel {
   background-color: #18181b !important;
+}
+
+/* Input focus effect */
+.str-chat__theme-dark .str-chat__input-flat:focus-within {
+  border-color: #ff4d6d;
+}
+
+/* Scrollbar styling for dark mode */
+.str-chat__theme-dark ::-webkit-scrollbar {
+  width: 8px;
+}
+.str-chat__theme-dark ::-webkit-scrollbar-thumb {
+  background-color: #ff4d6d;
+  border-radius: 4px;
+}
+.str-chat__theme-dark ::-webkit-scrollbar-track {
+  background-color: #18181b;
 }
 
 @layer base {

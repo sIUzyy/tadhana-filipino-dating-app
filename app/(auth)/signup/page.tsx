@@ -11,7 +11,7 @@ import SignUpForm from "@/components/authentication/auth-sign-up-form";
 // seo
 export const metadata: Metadata = {
   title: {
-    absolute: "Sign up - Tadhana",
+    absolute: "Join Tadhana – Where Fates Meet",
   },
 };
 

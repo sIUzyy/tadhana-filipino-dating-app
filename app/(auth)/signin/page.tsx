@@ -11,7 +11,7 @@ import SignInForm from "@/components/authentication/auth-sign-in-form";
 // seo
 export const metadata: Metadata = {
   title: {
-    absolute: "Sign in - Tadhana",
+    absolute: "Welcome Back to Tadhana – Your Fate Awaits",
   },
 };
 
