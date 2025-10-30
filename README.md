@@ -1,36 +1,94 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+[image.png]
 
-## Getting Started
+# Tadhana - A filipino dating app
 
-First, run the development server:
+Tadhana is designed to help people find genuine love and lasting relationships. Connect with Filipino singles who share your values, culture, and passion for meaningful connections. This app serves as an MVP project for the Builder Round at Whitecloak.
+
+## Tech Stack
+
+**Client:** Next.js (SPA), Tailwind CSS, ShadCN UI Components
+
+**Server:** Node.js, Express.js
+
+**Authentication:** JWT (JSON Web Tokens)
+
+**Database:** MongoDB
+
+**Messaging / Chat Platform:** GetStream
+
+## Features
+
+### 1. User Registration & Login (JWT)
+
+- **Sign-Up:** Register using email, enter name, age, gender, location, password, and upload a profile picture
+- **Login:** Secure login for returning users with email and password
+
+### 2. User Profile Management
+
+- View your profile in the browser
+- Edit profile details: name, bio, profile photo
+
+### 3. User Discovery & Matching
+
+- Browse profiles via desktop interface
+- Swipe right to like, left to skip
+- Form a match when both users like each other
+- Avoid showing the same profile again
+- Filters by age and gender
+
+### 4. Messaging / Chat (Get Stream Messaging Service)
+
+- Chat unlocked only after matching
+- Send and receive text messages
+
+### 5. Match List
+
+- Display all current matches
+- View matches profile
+- Unmatch to remove chat access
+
+### 6. Bonus Features
+
+- Light/dark mode UI toggle
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  git clone https://github.com/sIUzyy/tadhana-filipino-dating-app.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd tadhana-filipino-dating-app
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Install dependencies
 
-## Learn More
+```bash
+  npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the server (make sure you add .env.local in your root directory)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment Variables
 
-## Deploy on Vercel
+To run this project, you will need to add the following environment variables to your .env.local file
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`NEXT_PUBLIC_API_LOCAL_URL`=http://localhost:5000/api/v1
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`NEXT_PUBLIC_API_BASE_URL`=http://localhost:5000
+
+You can get the Stream API key by creating an account at https://getstream.io/. After signing up, copy the Key (not the Secret).
+
+`NEXT_PUBLIC_STREAM_API_KEY`=
+
+## Author
+
+- [@sIUzyy](https://github.com/sIUzyy)
