@@ -22,8 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldDescription,
@@ -31,6 +29,8 @@ import {
   FieldLabel,
   FieldSet,
 } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function SignUpForm() {
   // navigation
@@ -143,6 +143,7 @@ export default function SignUpForm() {
         id: response.data.user.id,
         name: response.data.user.name,
         email: response.data.user.email,
+        photo: response.data.user.photo,
         token: response.data.user.token,
       };
 
@@ -174,7 +175,7 @@ export default function SignUpForm() {
   return (
     <form className="max-w-xl mx-auto" onSubmit={handleSubmit}>
       <FieldSet>
-        {/* Upload Photo */}
+        {/* upload photo */}
         <Field>
           <div className="flex flex-col items-center justify-center">
             {!preview ? (
@@ -279,8 +280,14 @@ export default function SignUpForm() {
               <Input
                 id="age"
                 type="number"
+                min={18}
                 placeholder={"e.g., 18"}
                 value={age}
+                onKeyDown={(e) => {
+                  if (e.key === "-" || e.key === "e" || e.key === "E") {
+                    e.preventDefault();
+                  }
+                }}
                 onChange={(e) => {
                   setAge(e.target.value);
                   if (ageError) setAgeError("");

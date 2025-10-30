@@ -6,7 +6,7 @@ type User = {
   id: string;
   name: string;
   email: string;
-  photo: string;
+  photo?: string;
   token: string; // backend JWT
   streamToken?: string; // Stream token from backend
   preferences?: {

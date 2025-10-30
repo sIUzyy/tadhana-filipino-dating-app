@@ -16,6 +16,7 @@ import DashboardTitle from "../dashboard-title";
 export default function SidebarSection() {
   // auth-context
   const { logout } = useAuth();
+
   // track the path
   const pathname = usePathname();
 
@@ -67,6 +68,8 @@ export default function SidebarSection() {
           </Link>
         </div>
       </div>
+
+      {/* logout button */}
       <Button onClick={handleLogout} variant={"outline"} className="w-full">
         Sign out
       </Button>

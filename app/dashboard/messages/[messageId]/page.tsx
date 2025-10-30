@@ -1,9 +1,26 @@
 "use client";
 
-import Container from "@/components/containers/container";
+// react-next
+import Link from "next/link";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+
+// context
 import { useAuth } from "@/context/auth-context";
+import { useTheme } from "@/context/theme-context";
+
+// components
+import Container from "@/components/containers/container";
+
+// lib
+import axios from "axios";
+import { ChevronLeft } from "lucide-react";
+
+// stream-chat (message service)
 import { StreamChat } from "stream-chat";
+
+// stream-chat-react (message service)
 import {
   Chat,
   Channel,
@@ -13,14 +30,8 @@ import {
   Window,
   LoadingIndicator,
 } from "stream-chat-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
 
-import { useTheme } from "@/context/theme-context";
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-
-// Custom header component
+// custom header component
 const CustomChannelHeader = () => (
   <div className="flex items-center gap-1 p-2 border-b">
     <Link
@@ -34,46 +45,66 @@ const CustomChannelHeader = () => (
 );
 
 export default function MessageIdPage() {
-  const { messageId } = useParams(); // this is matchId
-  const { user } = useAuth();
-  const [chatClient, setChatClient] = useState<StreamChat | null>(null);
-  const [channelId, setChannelId] = useState("");
+  // message id params for dynamic view
+  const { messageId } = useParams();
 
+  // auth-context and theme context
+  const { user } = useAuth();
   const { isDark } = useTheme();
+
+  // navigation
+  const router = useRouter();
+
+  // stream-chat state
+  const [channelId, setChannelId] = useState("");
+  const [chatClient, setChatClient] = useState<StreamChat | null>(null);
+
+  // error state
+  const [isError, setIsError] = useState(false);
+
+  // initialize a chat
   useEffect(() => {
+    // if there's no user, stop.
     if (!user) return;
 
     const initChat = async () => {
       try {
-        // 1️⃣ Get match channel ID
+        // get the match channel id from backend
         const channelRes = await axios.get(
-          `http://localhost:5000/api/v1/match/${messageId}/channel`,
+          `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/match/${messageId}/channel`,
           {
-            headers: { Authorization: `Bearer ${user.token}` },
+            headers: { Authorization: `Bearer ${user.token}` }, // get the user jwt token
           }
         );
         const channelId = channelRes.data.channelId;
         setChannelId(channelId);
 
-        // 2️⃣ Get Stream token for current user
+        // get Stream token for current user
         const tokenRes = await axios.get(
-          "http://localhost:5000/api/v1/stream/token",
+          `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/stream/token`,
           {
             headers: { Authorization: `Bearer ${user.token}` },
           }
         );
         const streamToken = tokenRes.data.token;
 
-        // 3️⃣ Initialize Stream client
+        const photoURL = user.photo
+          ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/${user.photo.replace(
+              /\\/g,
+              "/"
+            )}`
+          : undefined;
+
+        // initialize Stream client
         const client = new StreamChat(process.env.NEXT_PUBLIC_STREAM_API_KEY!);
         await client.connectUser(
-          { id: user.id, name: user.name, image: user.photo },
+          { id: user.id, name: user.name, image: photoURL },
           streamToken
         );
 
         setChatClient(client);
       } catch (err) {
-        console.error(err);
+        setIsError(true);
       }
     };
 
@@ -84,6 +115,13 @@ export default function MessageIdPage() {
       chatClient?.disconnectUser();
     };
   }, [user]);
+
+  // redirect when channel or init fails
+  useEffect(() => {
+    if (isError) {
+      router.replace("/dashboard/messages");
+    }
+  }, [isError, router]);
 
   if (!chatClient || !channelId) return <LoadingIndicator />;
 

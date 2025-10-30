@@ -44,18 +44,18 @@ export default function PreferencesSelection() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_LOCAL_URL}/users/preferences`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}` }, // jwt token
           }
         );
 
         const prefs = response.data.preferences;
+
         if (prefs) {
           setGender(prefs.gender || "Any");
           setAgeRange([prefs.ageRange?.min || 18, prefs.ageRange?.max || 99]);
         }
       } catch (err) {
-        console.error(err);
-        toast.error("Failed to load preferences.");
+        toast.error("Unable to load your preferences. Please try again.");
       } finally {
         setIsLoading(false);
       }
@@ -89,10 +89,9 @@ export default function PreferencesSelection() {
       // update global user state in AuthContext
       updateUser({ preferences: prefs }); // so discovery page and other pages re-render correctly
 
-      toast.success("Preferences updated successfully!");
-    } catch (err: any) {
-      console.error(err);
-      toast.error("Failed to update preferences.");
+      toast.success("Your preferences have been updated successfully.");
+    } catch (err: unknown) {
+      toast.error("Failed to update preferences. Please try again later.");
     }
   };
 
@@ -102,7 +101,7 @@ export default function PreferencesSelection() {
   return (
     <FieldSet>
       <FieldGroup className="space-y-4">
-        {/* Gender Selection */}
+        {/* gender selection */}
         <Field>
           <FieldLabel>Preferred Gender</FieldLabel>
           <Select value={gender} onValueChange={setGender}>
@@ -117,7 +116,7 @@ export default function PreferencesSelection() {
           </Select>
         </Field>
 
-        {/* Age Range Selection */}
+        {/* age range selection */}
         <Field>
           <FieldLabel>Preferred Age Range</FieldLabel>
           <Slider
@@ -134,6 +133,7 @@ export default function PreferencesSelection() {
         </Field>
       </FieldGroup>
 
+      {/* button action */}
       <div className="flex lg:justify-end">
         <Button
           onClick={handleSave}

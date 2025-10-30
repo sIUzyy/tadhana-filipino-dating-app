@@ -6,9 +6,14 @@ import DiscoverySwipingMechanics from "@/components/dashboard/discovery/discover
 
 export default function Dashboard() {
   return (
-    <Container className="py-5 h-screen flex flex-col items-center justify-center">
+    <Container className="py-5 h-[90vh] flex flex-col items-center justify-center">
+      {/* header (start finding your tadhana...) */}
       <DiscoveryHeader />
+
+      {/* data-content (swiping cards) */}
       <DiscoverySwipingMechanics />
+
+      {/* footer (notes about filteration) */}
       <DiscoveryFooter />
     </Container>
   );

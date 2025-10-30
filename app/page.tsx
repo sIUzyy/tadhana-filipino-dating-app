@@ -13,9 +13,6 @@ import AboutSection from "@/components/about/about-section";
 import FeatureSection from "@/components/feature/feature-section";
 import TestimonialSection from "@/components/testimonial/testimonial-section";
 
-// show this dashboard if user is logged in
-import Dashboard from "./dashboard/page";
-
 // route
 import PublicRoute from "@/components/routes/public-route";
 

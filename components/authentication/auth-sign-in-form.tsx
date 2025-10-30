@@ -75,10 +75,11 @@ export default function SignInForm() {
         id: response.data.user.id,
         name: response.data.user.name,
         email: response.data.user.email,
+        photo: response.data.user.photo,
         token: response.data.user.token,
       };
 
-      // auth-context
+      // send the user data to auth-context
       login(userData);
 
       // toast message
@@ -91,8 +92,26 @@ export default function SignInForm() {
       // direct to dashboard after signing in
       router.push("/dashboard");
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : error;
-      toast.error("Signing in failed. Please try again later.");
+      setIsLoading(false);
+
+      setIsLoading(false);
+
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (status === 401) {
+          toast.error(message || "Invalid credentials. Please try again.");
+        } else if (status === 400) {
+          toast.error(message || "Please provide both email and password.");
+        } else if (status === 500) {
+          toast.error("Server error. Please try again later.");
+        } else {
+          toast.error(message || "Signing in failed. Please try again later.");
+        }
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }

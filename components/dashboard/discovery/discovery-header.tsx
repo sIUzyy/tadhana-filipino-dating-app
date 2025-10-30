@@ -7,15 +7,15 @@ import { useAuth } from "@/context/auth-context";
 import DashboardTitle from "../dashboard-title";
 
 export default function DiscoveryHeader() {
+  // auth-context
   const { user } = useAuth();
-  console.log(user);
 
   return (
     <div className="mb-5 w-full text-center">
       <DashboardTitle
         text="Start Finding Your Tadhana,"
         details="Swipe right kung bet mo, left kung next!"
-        label={user?.name}
+        label={user?.name || "Mystery User"}
         className="text-center mb-5"
       />
     </div>

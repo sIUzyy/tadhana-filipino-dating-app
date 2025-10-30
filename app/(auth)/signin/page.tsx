@@ -1,5 +1,7 @@
 // next
 import Link from "next/link";
+
+// seo
 import { Metadata } from "next";
 
 // components

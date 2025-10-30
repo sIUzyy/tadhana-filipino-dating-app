@@ -1,5 +1,8 @@
-import Title from "@/components/main-title";
+// react-next
 import Link from "next/link";
+
+// component
+import Title from "@/components/main-title";
 export default function NotFound() {
   return (
     <main className="grid h-screen place-items-center bg-dark-color px-4 ">

@@ -8,7 +8,28 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 // image-src
 import placeholder_img from "../../../images/image-placeholder.jpg";
 
-export default function SwipeCard({ person, isTop, handleSwipe }: any) {
+// data type
+export type Person = {
+  id: string;
+  name: string;
+  gender: string;
+  location: string;
+  bio: string;
+  image?: string;
+};
+
+// data type
+interface SwipeCardProps {
+  person: Person;
+  isTop: boolean;
+  handleSwipe: (targetUserId: string, liked: boolean) => void;
+}
+
+export default function SwipeCard({
+  person,
+  isTop,
+  handleSwipe,
+}: SwipeCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-15, 15]);
   const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
@@ -34,7 +55,7 @@ export default function SwipeCard({ person, isTop, handleSwipe }: any) {
       }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      {/* Background Image */}
+      {/* background image */}
       <Image
         src={imageSrc}
         alt={person.name}
@@ -44,10 +65,10 @@ export default function SwipeCard({ person, isTop, handleSwipe }: any) {
         unoptimized
       />
 
-      {/* Gradient overlay for readability */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
+      {/* gradient overlay for readability */}
+      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
 
-      {/* Text content */}
+      {/* text content */}
       <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
         <h2 className="text-2xl font-semibold">{person.name}</h2>
 

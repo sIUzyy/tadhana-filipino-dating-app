@@ -1,3 +1,4 @@
+// components
 import Container from "@/components/containers/container";
 import DashboardTitle from "@/components/dashboard/dashboard-title";
 import MatchesContent from "@/components/dashboard/matches/matches-content";
@@ -9,9 +10,10 @@ export default function MatchesPage() {
       <DashboardTitle
         text="Your Matches"
         details="See people who share the same interests with you."
+        className="text-center"
       />
 
-      {/* content */}
+      {/* data-content */}
       <MatchesContent />
     </Container>
   );

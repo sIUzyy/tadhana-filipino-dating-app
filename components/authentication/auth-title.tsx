@@ -1,6 +1,7 @@
 // next
 import Link from "next/link";
 
+// data type
 interface AuthTitleProps {
   title: string;
   label: string;

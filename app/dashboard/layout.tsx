@@ -1,5 +1,4 @@
-"use client"; // marks this component as a client Component in Next.js
-
+"use client";
 // react
 import { useEffect, useState } from "react";
 

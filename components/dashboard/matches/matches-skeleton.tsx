@@ -8,17 +8,17 @@ export default function MatchesSkeleton() {
       {[1, 2, 3].map((i) => (
         <Card key={i} className="animate-pulse">
           <CardHeader className="flex items-start gap-4">
-            {/* Avatar */}
+            {/* avatar */}
             <Skeleton className="h-20 w-20 rounded-full" />
 
             <div className="flex-1 flex flex-col gap-2">
-              {/* Name */}
+              {/* name */}
               <Skeleton className="h-6 w-1/2 rounded" />
-              {/* Bio */}
+              {/* name */}
               <Skeleton className="h-4 w-full rounded" />
               <Skeleton className="h-4 w-5/6 rounded" />
               <Skeleton className="h-4 w-2/3 rounded" />
-              {/* Buttons */}
+              {/* buttons */}
               <div className="flex gap-2 mt-4">
                 <Skeleton className="h-10 w-24 rounded" />
                 <Skeleton className="h-10 w-24 rounded" />

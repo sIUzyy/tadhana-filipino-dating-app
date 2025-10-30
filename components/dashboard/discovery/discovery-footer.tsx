@@ -1,3 +1,4 @@
+// link
 import Link from "next/link";
 
 export default function DiscoveryFooter() {
@@ -8,7 +9,8 @@ export default function DiscoveryFooter() {
         99. To customize your preferences, go{" "}
         <Link
           href="/dashboard/profile/preferences"
-          className="text-indigo-600 hover:underline"
+          title="Customize your preferences"
+          className="text-indigo-500 underline underline-offset-2 hover:opacity-80"
         >
           here
         </Link>
