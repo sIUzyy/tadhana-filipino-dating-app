@@ -162,8 +162,8 @@ export default function SignUpForm() {
       setPassword("");
       setFile(null);
 
-      // direct to dashboard after signing up
-      router.push("/dashboard");
+      // direct to dashboard/profile after signing up
+      router.push("/dashboard/profile");
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status;
